@@ -20,6 +20,31 @@ class GroupsController < ApplicationController
   end
 
 
+def join
+  @group = Group.find(params[:id])
+
+  if !current_user.is_member_of?(@group)
+    current_user.join!(@group)
+    flash[:notice] = "加入本讨论版成功！"
+  else
+    flash[:warning] = "你已经是本讨论组成员了"
+  end
+
+  redirect_to group_path(@group)
+end
+
+def quit
+  @group = Group.find(params[:id])
+
+  if current_user.is_member_of?(@group)
+    current_user.quit!(@group)
+    flash[:alert] = "已经退出"
+  else
+    flash[:warning] = "你不是本套路版成员，怎么退出！"
+  end
+  redirect_to group_path(@group)
+end
+
   def show
     @group = Group.find(params[:id])
     @posts = @group.posts.recent.paginate(:page => params[:page], :per_page => 5)
