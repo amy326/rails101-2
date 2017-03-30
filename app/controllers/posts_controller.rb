@@ -24,5 +24,4 @@ class PostsController < ApplicationController
     params.require(:post).permit(:content)
   end
 
-  scope :recent, -> { order("created_at DESC")}
 end
